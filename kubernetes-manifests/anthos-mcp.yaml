@@ -47,7 +47,7 @@ spec:
     spec:
       containers:
       - name: anthos-mcp
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         image: us-central1-docker.pkg.dev/gke-hackathon-472001/bank-of-anthos-gke/anthos-mcp:latest
         resources:
           limits:

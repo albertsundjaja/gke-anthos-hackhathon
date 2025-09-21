@@ -71,7 +71,7 @@ spec:
                 name: environment-config
             - configMapRef:
                 name: promotion-db-config
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           image: us-central1-docker.pkg.dev/gke-hackathon-472001/bank-of-anthos-gke/promotion-db:latest
           name: promotion-db
           ports:

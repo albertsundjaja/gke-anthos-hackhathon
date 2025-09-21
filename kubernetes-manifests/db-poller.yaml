@@ -25,7 +25,7 @@ spec:
           containers:
           - name: transaction-checker
             image: us-central1-docker.pkg.dev/gke-hackathon-472001/bank-of-anthos-gke/db-poller:latest
-            imagePullPolicy: IfNotPresent
+            imagePullPolicy: Always
             envFrom:
             - configMapRef:
                 name: ledger-db-config

@@ -21,7 +21,7 @@ spec:
       containers:
       - name: nats-subscriber
         image: us-central1-docker.pkg.dev/gke-hackathon-472001/bank-of-anthos-gke/nats-subscriber:latest
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         env:
         - name: NATS_URL
           value: "nats://simple-nats:4222"

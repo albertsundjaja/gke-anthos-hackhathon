@@ -12,9 +12,10 @@ spec:
       labels:
         app: promotion-agent
     spec:
+      serviceAccount: adk-agent-sa
       containers:
       - name: promotion-agent
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         image: us-central1-docker.pkg.dev/gke-hackathon-472001/bank-of-anthos-gke/promotion-agent:latest
         resources:
           limits:

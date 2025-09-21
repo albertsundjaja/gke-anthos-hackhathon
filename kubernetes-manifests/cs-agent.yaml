@@ -12,9 +12,10 @@ spec:
       labels:
         app: cs-agent
     spec:
+      serviceAccount: adk-agent-sa
       containers:
       - name: cs-agent
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         image: us-central1-docker.pkg.dev/gke-hackathon-472001/bank-of-anthos-gke/cs-agent:latest
         resources:
           limits:
