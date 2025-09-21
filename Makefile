@@ -100,6 +100,40 @@ ifndef PROJECT_ID
 else ifndef ZONE
 	$(error ZONE is undefined)
 endif
+# --- Multi-arch (Buildx) settings ---
+PLATFORMS ?= linux/amd64,linux/arm64
+BUILDX_BUILDER ?= multiarch-builder
+
+# Initialize Buildx builder (safe to re-run)
+buildx-init:
+	@docker buildx inspect $(BUILDX_BUILDER) >/dev/null 2>&1 || docker buildx create --name $(BUILDX_BUILDER) --use
+	@docker buildx use $(BUILDX_BUILDER)
+	@docker buildx inspect --bootstrap >/dev/null
+
+# Multi-arch builds push directly (use --push)
+# Usage tip: set PLATFORMS=linux/amd64 for faster amd64-only builds
+
+buildx-cs-agent: buildx-init
+	docker buildx build --platform $(PLATFORMS) -t us-central1-docker.pkg.dev/gke-hackathon-472001/bank-of-anthos-gke/cs-agent:latest -f src/cs-agent/Dockerfile src/cs-agent/ --push
+
+buildx-anthos-mcp: buildx-init
+	docker buildx build --platform $(PLATFORMS) -t us-central1-docker.pkg.dev/gke-hackathon-472001/bank-of-anthos-gke/anthos-mcp:latest -f src/anthos-mcp/Dockerfile src/anthos-mcp/ --push
+
+buildx-promotion-db: buildx-init
+	docker buildx build --platform $(PLATFORMS) -t us-central1-docker.pkg.dev/gke-hackathon-472001/bank-of-anthos-gke/promotion-db:latest -f src/promotion/promotion-db/Dockerfile src/promotion/promotion-db/ --push
+
+buildx-promotion-agent: buildx-init
+	docker buildx build --platform $(PLATFORMS) -t us-central1-docker.pkg.dev/gke-hackathon-472001/bank-of-anthos-gke/promotion-agent:latest -f src/promotion/agent/Dockerfile src/promotion/agent/ --push
+
+buildx-db-poller: buildx-init
+	docker buildx build --platform $(PLATFORMS) -t us-central1-docker.pkg.dev/gke-hackathon-472001/bank-of-anthos-gke/db-poller:latest -f src/db-poller/Dockerfile src/db-poller/ --push
+
+buildx-nats-subscriber: buildx-init
+	docker buildx build --platform $(PLATFORMS) -t us-central1-docker.pkg.dev/gke-hackathon-472001/bank-of-anthos-gke/nats-subscriber:latest -f src/promotion/nats-subscriber/Dockerfile src/promotion/nats-subscriber/ --push
+
+# Build all custom images as multi-arch and push
+buildx-all: buildx-cs-agent buildx-anthos-mcp buildx-promotion-db buildx-promotion-agent buildx-db-poller buildx-nats-subscriber
+
 
 build-cs-agent:
 	docker build -t us-central1-docker.pkg.dev/gke-hackathon-472001/bank-of-anthos-gke/cs-agent:latest -f src/cs-agent/Dockerfile src/cs-agent/
@@ -225,3 +259,6 @@ push-nats-subscriber:
 
 # Push all custom images (ensure you built them first)
 push-local: push-cs-agent push-anthos-mcp push-promotion-db push-promotion-agent push-db-poller push-nats-subscriber
+
+kube-delete-error:
+	kubectl get pods | awk '$3 ~ /CrashLoopBackOff|Error/ {print $1}' | xargs -r kubectl delete pod
