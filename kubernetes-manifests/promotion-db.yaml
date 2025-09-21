@@ -1,0 +1,92 @@
+apiVersion: v1
+data:
+  PROMOTION_DB_URI: postgresql://promotion-admin:promotion-pwd@promotion-db:5432/promotion-db
+  POSTGRES_DB: promotion-db
+  POSTGRES_PASSWORD: promotion-pwd
+  POSTGRES_USER: promotion-admin
+kind: ConfigMap
+metadata:
+  labels:
+    app: promotion-db
+    application: bank-of-anthos
+    environment: development
+    team: promotion
+    tier: db
+  name: promotion-db-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    application: bank-of-anthos
+    environment: development
+    team: promotion
+    tier: db
+  name: promotion-db
+spec:
+  ports:
+    - name: tcp
+      port: 5432
+      protocol: TCP
+      targetPort: 5432
+  selector:
+    app: promotion-db
+    application: bank-of-anthos
+    environment: development
+    team: promotion
+    tier: db
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    application: bank-of-anthos
+    environment: development
+    team: promotion
+    tier: db
+  name: promotion-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: promotion-db
+      application: bank-of-anthos
+      environment: development
+      team: promotion
+      tier: db
+  serviceName: promotion-db
+  template:
+    metadata:
+      labels:
+        app: promotion-db
+        application: bank-of-anthos
+        environment: development
+        team: promotion
+        tier: db
+    spec:
+      containers:
+        - envFrom:
+            - configMapRef:
+                name: environment-config
+            - configMapRef:
+                name: promotion-db-config
+          imagePullPolicy: Always
+          image: us-central1-docker.pkg.dev/gke-hackathon-472001/bank-of-anthos-gke/promotion-db:latest
+          name: promotion-db
+          ports:
+            - containerPort: 5432
+          resources:
+            limits:
+              cpu: 250m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgresdb
+              subPath: postgres
+      volumes:
+        - emptyDir: {}
+          name: postgresdb

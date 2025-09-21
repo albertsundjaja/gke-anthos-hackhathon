@@ -1,12 +1,8 @@
 # Meet Your AI Bankers: Next-Gen Bank with AI Employees!
 
-This project forked [Bank of Anthos](https://github.com/GoogleCloudPlatform/bank-of-anthos) by Google Cloud Platform and is the source for the [GKE hackhathon](https://gketurns10.devpost.com/)
-
 ## Project Overview
 
 Banking reimagined. Never wait in line and open 24/7! Every question is answered instantly by "AI employees”. This project transforms the classic Bank of Anthos into a next-generation, AI-powered experience. It has conversational agents that handle your banking needs and even credit your account automatically when you qualify for a reward.
-
-![architecture_diagram](docs/img/extension.jpg)
 
 ## Key Features and Functionality
 
@@ -86,45 +82,4 @@ Banking reimagined. Never wait in line and open 24/7! Every question is answered
 ### 3. Vertex AI
 
 - Setting up Vertex AI was straightforward. This is the easiest component to setup. Just needed to create an API key and everything worked out of the box. I think this is also thanks to the Google ADK which make it easier to use Gemini
-
-## How to Run
-
-1. **Set up environment variables**:
-   ```bash
-   export PROJECT_ID="your-gcp-project-id"
-   export REGION="us-central1"
-   export VERTEX_API_KEY="your-vertex-api-key"
-   export GOOGLE_GENAI_USE_VERTEXAI="TRUE"
-   export GOOGLE_API_KEY="your-google-api-key"
-   export GOOGLE_PROJECT_ID="your-gcp-project-id"
-   export GOOGLE_CLOUD_LOCATION="us-central1"
-   ```
-
-2. **Authenticate with Google Cloud**:
-   ```bash
-   gcloud auth login
-   ```
-
-3. **Build and push multi-architecture images**:
-   ```bash
-   make buildx-all
-   ```
-
-4. **Deploy to GKE or local Kubernetes (kind)**:
-   ```bash
-   make kind-deploy
-   ```
-   to deploy to kind, you will need to setup the kubectl context to your kind cluster
-
-5. **Access the frontend or the chat UI**
-
-    ```
-    kubectl get service frontend | awk '{print $4}'
-    ```
-    access the frontend at `http://FRONTEND_IP`
-
-    ```
-    kubectl get service cs-agent | awk '{print $4}'
-    ```
-    access the Agent chat UI at `http://AGENT_IP:8080`
 

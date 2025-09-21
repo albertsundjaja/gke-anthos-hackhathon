@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simple-nats
+  labels:
+    app: simple-nats
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simple-nats
+  template:
+    metadata:
+      labels:
+        app: simple-nats
+    spec:
+      containers:
+      - name: nats
+        image: nats:2.11.9-alpine
+        ports:
+        - containerPort: 4222
+          name: nats
+        - containerPort: 8222
+          name: monitor
+        args:
+        - "--port=4222"
+        - "--http_port=8222"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: simple-nats
+  labels:
+    app: simple-nats
+spec:
+  selector:
+    app: simple-nats
+  ports:
+  - name: nats
+    port: 4222
+    targetPort: 4222
+  - name: monitor
+    port: 8222
+    targetPort: 8222
+  type: ClusterIP
