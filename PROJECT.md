@@ -1,12 +1,8 @@
 # Meet Your AI Bankers: Next-Gen Bank with AI Employees!
 
-This project forked [Bank of Anthos](https://github.com/GoogleCloudPlatform/bank-of-anthos) by Google Cloud Platform and is the source for the [GKE hackhathon](https://gketurns10.devpost.com/)
-
 ## Project Overview
 
 Banking reimagined. Never wait in line and open 24/7! Every question is answered instantly by "AI employees”. This project transforms the classic Bank of Anthos into a next-generation, AI-powered experience. It has conversational agents that handle your banking needs and even credit your account automatically when you qualify for a reward.
-
-![architecture_diagram](docs/img/extension.jpg)
 
 ## Key Features and Functionality
 
@@ -86,5 +82,4 @@ Banking reimagined. Never wait in line and open 24/7! Every question is answered
 ### 3. Vertex AI
 
 - Setting up Vertex AI was straightforward. This is the easiest component to setup. Just needed to create an API key and everything worked out of the box. I think this is also thanks to the Google ADK which make it easier to use Gemini
-
 

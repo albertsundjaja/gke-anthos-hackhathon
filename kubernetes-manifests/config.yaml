@@ -19,6 +19,11 @@ metadata:
 data:
   LOCAL_ROUTING_NUM: "883745000"
   PUB_KEY_PATH: "/tmp/.ssh/publickey"
+  # Disable Google Cloud features for local development
+  ENABLE_METRICS: "false"
+  ENABLE_TRACING: "false"
+  SPRING_CLOUD_GCP_TRACE_ENABLED: "false"
+  SPRING_CLOUD_GCP_LOGGING_ENABLED: "false"
 ---
 apiVersion: v1
 kind: ConfigMap

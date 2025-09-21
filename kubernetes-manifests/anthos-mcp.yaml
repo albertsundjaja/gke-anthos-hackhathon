@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: anthos-mcp
+    application: bank-of-anthos
+    environment: development
+    team: anthos-mcp
+    tier: backend
+  name: anthos-mcp
+spec:
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: anthos-mcp
+    application: bank-of-anthos
+    environment: development
+    team: anthos-mcp
+    tier: backend
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: anthos-mcp
+    application: bank-of-anthos
+    environment: development
+    team: anthos-mcp
+    tier: backend
+  name: anthos-mcp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: anthos-mcp
+  template:
+    metadata:
+      labels:
+        app: anthos-mcp
+        application: bank-of-anthos
+        environment: development
+        team: anthos-mcp
+        tier: backend
+    spec:
+      containers:
+      - name: anthos-mcp
+        imagePullPolicy: IfNotPresent
+        image: us-central1-docker.pkg.dev/gke-hackathon-472001/bank-of-anthos-gke/anthos-mcp:latest
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+            ephemeral-storage: "1Gi"
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+            ephemeral-storage: "512Mi"
+        ports:
+        - containerPort: 8080
+
